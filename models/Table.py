@@ -6,6 +6,10 @@ class TableElement:
         self.content = _content
         self.children = []
     
+    def add_child_element(self, element):
+        if isinstance(element, TableElement):
+            self.children.append(element)
+    
     def __str(self, indent):
         lines = []
         i = " " * (indent * self.indent_size)
@@ -38,10 +42,6 @@ class TableBuilder:
     
     def add_child_element(self, element:TableElement):
         self.__table_root.children.append(element)
-
-    def add_child_fluent(self, child_name:str, child_text:str):
-        self.__table_root.children.append(TableElement(child_name,child_text))
-        return self
     
     def __str__(self):
         return str(self.__table_root)
@@ -50,7 +50,6 @@ class Table:
     def __init__(self, table_data):
         self._raw_data = table_data
         self.builder = TableElement.start_building()
-        self.builder.add_child("th", "Random")
     
     def __str__(self) -> str:
         return str(self.builder)
