@@ -1,5 +1,8 @@
+from typing import Dict
+
+
 class TableElement:
-    indent_size = 2
+    indent_size = 1
 
     def __init__(self, _type: str = "", _content: str = ""):
         self.type = _type
@@ -47,9 +50,27 @@ class TableBuilder:
         return str(self.__table_root)
 
 class Table:
-    def __init__(self, table_data):
-        self._raw_data = table_data
+    def __init__(self, table_data: Dict):
+        self._raw_data: Dict = table_data
         self.builder = TableElement.start_building()
+        self._generate_table_attrs()
+        self._generate_headers()
     
+    def _generate_table_attrs(self):
+        caption = self._raw_data.get("caption", None)
+        if caption:
+            self.builder.add_child("caption", caption)
+    
+    def _generate_headers(self):
+        headers = self._raw_data.get("headers", [])
+        if len(headers):
+            header_element = TableElement("thead")
+            header_row = TableElement("tr")
+            for h in headers:
+                e = TableElement("th", h)
+                header_row.add_child_element(e)
+            header_element.add_child_element(header_row)
+            self.builder.add_child_element(header_element)
+
     def __str__(self) -> str:
         return str(self.builder)
