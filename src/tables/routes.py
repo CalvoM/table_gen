@@ -10,12 +10,13 @@ table_schema = {
     "properties": {
         "caption": {"type": "string"},
         "style": {"type": "string"}, # TODO: v2
-        "headers": {"type": "array"}
+        "headers": {"type": "array"},
+        "data": {"type": "array"},
     },
     "required": ["caption"]
 }
 
-@table_bp.route("/submit", methods=("POST",))
+@table_bp.post("/submit")
 @expects_json(table_schema)
 def submit_table_data():
     request_data = request.get_json()

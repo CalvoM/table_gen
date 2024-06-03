@@ -55,6 +55,7 @@ class Table:
         self.builder = TableElement.start_building()
         self._generate_table_attrs()
         self._generate_headers()
+        self._generate_data()
     
     def _generate_table_attrs(self):
         caption = self._raw_data.get("caption", None)
@@ -71,6 +72,18 @@ class Table:
                 header_row.add_child_element(e)
             header_element.add_child_element(header_row)
             self.builder.add_child_element(header_element)
+
+    def _generate_data(self):
+        data = self._raw_data.get("data", [])
+        body_element = TableElement("tbody")
+        if(len(data)):
+            for row in data:
+                body_row = TableElement("tr")
+                for d in row:
+                    e = TableElement("td", d)
+                    body_row.add_child_element(e)
+                body_element.add_child_element(body_row)
+            self.builder.add_child_element(body_element)
 
     def __str__(self) -> str:
         return str(self.builder)
